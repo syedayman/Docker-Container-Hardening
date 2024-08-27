@@ -1,0 +1,20 @@
+####### DATABASE ###########
+
+# First build the database image from the supplied makefile, just by entering the command: 
+make
+#Then run the container with
+make run
+# After running this command, mysql container will be configured with the database.
+# There are clean up scripts already provided
+make clean
+
+####### WEBSERVER ###########
+
+# First build the webserver image from the supplied makefile, just by entering the command: 
+make
+#Then run the container with
+make run
+# You should now be able to browse to http://localhost/ to view the web application!
+
+# There are clean up scripts provided
+make clean
