@@ -1,5 +1,5 @@
 # Docker-Container-Hardening-Project
-This project hardens container images for a basic web application consisting of a web server container and a database server container.
+This project hardens container images for a basic web application, consisting of a web server container and a database server container.
 
 ![image](https://github.com/user-attachments/assets/de5c2958-a9ab-4d92-a386-babe18248d15)
 
