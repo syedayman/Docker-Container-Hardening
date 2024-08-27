@@ -7,27 +7,29 @@ This project hardens container images for a basic web application, consisting of
 - Refine poorly configured Dockerfiles and associated config files so that hardened images may be created to securely run the application.
 
 ## Files 
-The original database Dockerfile is shown below. Find the file [here](application_files_refined/dbserver/Dockerfile)
+The original database Dockerfile is shown below. Find the file [here](application_files_original/dbserver/Dockerfile)
+
 ![image](https://github.com/user-attachments/assets/f0e0f604-5e1f-4da5-9bab-3e3b3a8cbffd)
 
-The original webserver Dockerfile is shown below. Find the file [here](application_files_refined/webserver/Dockerfile)
+The original webserver Dockerfile is shown below. Find the file [here](application_files_original/webserver/Dockerfile)
+
 ![image](https://github.com/user-attachments/assets/f1ae6486-9ef5-41c2-a832-75816cd8256d)
 ![image](https://github.com/user-attachments/assets/edbf881d-a5ba-4708-931a-e9d24d6742ec)
 
 
 ## Steps
 ### Container Hardening
-The refined Dockerfile of the database image is provided below.
+The refined Dockerfile of the database image is provided below. Find the file [here](application_files_refined/dbserver/Dockerfile)
 
 ![image](https://github.com/user-attachments/assets/435c3646-495c-43fd-aaba-f433c5e60194)
 
 The refined Dockerfile firstly uses an updated and specific version of the base image. It has been changed from mariadb:10 to mariadb:11.3.2, as using the most up to date base image, while maintaining a specific version, strikes a balance between staying current with security patches and ensuring consistent, reliable behaviour of the database server.
 
-The refined Dockerfile creates a new system user called mysql with the -r flag to run it as a system account which is just used for running services (as opposed to a user created for interactive use) to make sure the container is run as an unprivileged user to adhere to the principle of least privilege. The USER mysql command ensures all subsequent processes running in the container are run under this user to prevent an attacker from having root level access if the container was compromised. 
+The refined Dockerfile creates a new system user called mysql with the -r flag to run it as a system account which is just used for running services (as opposed to a user created for interactive use) to make sure the container is run as an unprivileged user to adhere to the principle of least privilege. The USER mysql entry ensures all subsequent processes running in the container are run under this user to prevent an attacker from having root level access if the container was compromised. 
 
-The refined Dockerfile removes the EXPOSE 3306 command to reduce the attack surface by preventing port access from inside the containers, especially since it is not necessary for the operation of the database. 
+The refined Dockerfile removes the EXPOSE 3306 entry to reduce the attack surface by preventing port access from inside the containers, especially since it is not necessary for the operation of the database. 
 
-The refined Dockerfile of the webserver image is provided below.
+The refined Dockerfile of the webserver image is provided below. Find the file [here](application_files_refined/webserver/Dockerfile)
 
 ![image](https://github.com/user-attachments/assets/4ebf9a4c-81c5-4f07-8725-73bf4dacdd18)
 
@@ -41,7 +43,7 @@ The refined Dockerfile removes the commands to expose ports 8004, 2375, and 22 a
 
 To achieve greater efficiency and improved functionality, Docker Compose was utilized instead of Makefiles to allow for a more streamlined and cohesive management of the multi-container application.
 
-The one-time configuration needed for setting up the environment is achieved with the command docker-compose build. This command builds the images as specified in the Dockerfile, downloading necessary packages, and preparing the environment as defined. Once this initial setup is complete, every subsequent start of the application is done using docker-compose up. This command brings up all the required services and containers outlined in the compose file, deftly handling both the initial launch and routine startups. To stop the application, docker-compose down is employed to gracefully halt all services and perform necessary cleanup of the environment.The docker-compose.yml file used to build and run the containers is illustrated below followed by a detailed description of solely its security features.
+The one-time configuration needed for setting up the environment is achieved with the command `docker-compose build`. This command builds the images as specified in the Dockerfile, downloading necessary packages, and preparing the environment as defined. Once this initial setup is complete, every subsequent start of the application is done using `docker-compose up`. This command brings up all the required services and containers outlined in the compose file, deftly handling both the initial launch and routine startups. To stop the application, `docker-compose down` is employed to gracefully halt all services and perform necessary cleanup of the environment.The docker-compose.yml file used to build and run the containers is illustrated below followed by a detailed description of solely its security features.
 
 ![image](https://github.com/user-attachments/assets/74b1b4a9-51a8-4c13-abcf-6e9e4481524c)
 ![image](https://github.com/user-attachments/assets/d0de5b65-ed54-4774-9639-00db99a301bb)
