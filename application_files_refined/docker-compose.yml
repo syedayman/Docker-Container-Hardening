@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  # Service definition for database container
+  dbserver:
+    build:
+      context: ./dbserver   # Specifies the directory containing the Dockerfile for building the dbserver image
+    container_name: 5586624_csvs_dbserver_c  # Custom name for the database container
+    user: mysql   # Run the container as the 'mysql' user 
+    env_file: ./vars.env  # Load sensitive environment variables from privileged file
+    volumes:
+      - ./dbserver/sqlconfig/csvs23db.sql:/docker-entrypoint-initdb.d/csvs23db.sql:ro  # Mounts an SQL script for initial database setup
+      - data:/var/lib/mysql  # Persistent volume for storing database data
+    hostname: db.cyber23.test  # Sets a custom hostname within the container
+    networks:
+      dbserver_net:  # Connects to the custom network '5586624_csvs_dbserver_net'
+    security_opt:
+      - seccomp=./default_seccomp.json  # Specifies custom seccomp profile for enhanced security
+      - no-new-privileges:true  # Prevents the container from gaining new privileges
+    cap_drop:
+      - ALL  # Initially drops all default Linux capabilities
+    cap_add:
+      - CAP_DAC_OVERRIDE
+      - CAP_SETGID
+      - CAP_SETUID  # Adds only the specific Linux capabilities required by the container
+    cpus: 0.5  # Limits the container to 50% of a CPU core
+    mem_limit: 500m  # Sets a memory limit of 500MB for the container
+    pids_limit: 150  # Limits the number of processes in the container to 150
+
+  # Service definition for the web server container
+  webserver:
+    build:
+      context: ./webserver  # Directory containing the Dockerfile for the webserver image
+    container_name: 5586624_csvs_webserver_c  # Custom container name
+    ports:
+      - "80:80"  # Maps port 80 from the host to port 80 in the container
+    environment:
+      DB_HOST: db.cyber23.test  # Environment variable specifying the database host
+    networks:
+      dbserver_net:  # Connects to the same network as the dbserver for communication
+    security_opt:
+      - seccomp=./default_seccomp.json  # Specifies custom seccomp profile
+      - no-new-privileges:true   # Prevents the container from gaining new privileges
+    cap_drop: 
+      - ALL  # Drops all default Linux capabilities for the web container
+    cap_add:
+      - CAP_NET_BIND_SERVICE
+      - CAP_NET_RAW
+      - CAP_DAC_OVERRIDE
+      - CAP_SETGID
+      - CAP_SETUID
+      - CAP_CHOWN  # Specific capabilities required for web server operations
+    cpus: 0.5  # Limits the container to 50% of a CPU core
+    mem_limit: 256m  # Memory limit set to 256MB
+    pids_limit: 100  # Limits the number of processes to 100
+
+# Network configuration
+networks:
+  dbserver_net: 
+    name: 5586624_csvs_dbserver_net  # Custom network name for internal communication
+    ipam:
+      config:
+        - subnet: 203.0.113.0/24  # Defines the subnet for the custom network
+
+# Volume definition
+volumes:
+  data:  # Named volume for persistent database storage
