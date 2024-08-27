@@ -1,4 +1,3 @@
-# Change your SID to your own one
 SID=u1234567
 NAME=csvs_dbserver
 ALL:
