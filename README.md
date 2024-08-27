@@ -7,10 +7,10 @@ This project hardens container images for a basic web application, consisting of
 - Refine poorly configured Dockerfiles and associated config files so that hardened images may be created to securely run the application.
 
 ## Files 
-The original database Dockerfile is shown below.
+The original database Dockerfile is shown below. Find the file [here](application_files_refined/dbserver/Dockerfile)
 ![image](https://github.com/user-attachments/assets/f0e0f604-5e1f-4da5-9bab-3e3b3a8cbffd)
 
-The original webserver Dockerfile is shown below.
+The original webserver Dockerfile is shown below. Find the file [here](application_files_refined/webserver/Dockerfile)
 ![image](https://github.com/user-attachments/assets/f1ae6486-9ef5-41c2-a832-75816cd8256d)
 ![image](https://github.com/user-attachments/assets/edbf881d-a5ba-4708-931a-e9d24d6742ec)
 
